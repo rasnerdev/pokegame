@@ -20,9 +20,9 @@ text-shadow:
         font-weight:bold;
   }
    header{
-     width:100%;
+     max-width:50%;
      text-align:center;
-     margin-left:10%;
+     margin-left:25%;
      margin:0 auto;
  }
  header img{
@@ -42,7 +42,7 @@ text-shadow:
  }
  .pokes > div{
      margin:10px;
-     width:100%;
+     width:25%;
  }
 
  .pokes > div > img{
@@ -123,4 +123,9 @@ a{
 
 @media (max-width: 600px) {
     .nombre{font-size:2em;}
+    header{
+        max-width:100%;
+        text-align:center;
+        margin:0 auto;
+    }
   }
