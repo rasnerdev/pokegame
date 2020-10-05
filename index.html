@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+</head>
+    <body>
+    <!--<img class="fondo" src="https://images.assetsdelivery.com/compings_v2/logvinyk/logvinyk1609/logvinyk160923019.jpg" alt="">-->
+        <header>
+            <a href="./"><img src="header.png" ></a>
+        </header>
+        <section>
+            <div class="rank">
+                <div class="aci"><b>Aciertos: </b><span class="aciertos">0</span></div>
+                <div class="mej"><b>Top: </b><span class="mejor">0</span></div>
+            </div>
+            <div class="nombre"></div>
+            <div class="pokes" style="display:flex;">
+                <div class="poke"><img class="poke1" src="" alt=""></div>
+                <div class="poke"><img class="poke2" src="" alt=""></div>
+                <div class="poke"><img class="poke3" src="" alt=""></div>
+            </div>
+        </section>
+        <footer>
+            Mas cosillas en <a class="footer" target="_blank" title="RasnerDev en Github!" href="https://github.com/rasnerdev">Github <i class="fab fa-github"></i></a>
+        </footer>
+
+        <script>
+            var aciertos = 0; 
+            var mejor = 0; 
+            var elegidos;
+            var seleccionados;
+            var temporal, nombreElegido; 
+    
+            $(function(){
+                $.getJSON("https://pokeapi.co/api/v2/pokemon/?offset=0&limit=2200", function(data) {
+                elegidos = []; 
+                pokes = data["results"];
+                seleccionados = [];
+                // Se añaden los 150 pokemon al array. 
+                for(var i = 0; i<151;i++){
+                    elegidos.push(pokes[i]);
+                }
+            
+                // Se eligen 3 pokemon al azar y se almacenan en seleccionados y se elige le nombre de 1 de ellos. 
+                function cogemosTres(){
+                    seleccionados = [];
+                    nombreElegido = ""; 
+                    for(var i = 0; i<3; i++){
+                        seleccionados.push(elegidos[Math.floor(Math.random() * elegidos.length)]);
+                    }
+                    temporal = seleccionados[Math.floor(Math.random() * seleccionados.length)]
+                    nombreElegido = temporal["name"]; 
+                    $(".nombre").text(nombreElegido);
+
+                    // Información del Pokemon elegido n1
+                    devuelvePokemon(seleccionados[0]["url"], 1);
+                    devuelvePokemon(seleccionados[1]["url"], 2);
+                    devuelvePokemon(seleccionados[2]["url"], 3);
+                }
+                cogemosTres();
+                function devuelvePokemon(url, posicion){
+                    $("img.poke"+posicion).attr("src","./img/loader.gif");
+                    $.getJSON(url, function(data) {
+                        console.log(data);;
+                        console.log(data["name"]);
+                        console.log(data["sprites"]["front_default"]);
+                        $("img.poke"+posicion).attr("src",data["sprites"]["front_default"]);
+                    });
+                }
+            
+                function repetimos(){
+                    cogemosTres();
+                    devuelvePokemon(seleccionados[0]["url"],1);
+                    devuelvePokemon(seleccionados[1]["url"],2);
+                    devuelvePokemon(seleccionados[2]["url"],3);
+                }
+
+                function acierto(){
+                    aciertos+=1; 
+                    repetimos(); 
+                }
+
+                function error(){
+                    aciertos = 0; 
+                    $(".aciertos").text(0); 
+                    repetimos(); 
+                }
+
+                // Elección de pokemon.
+                $("div.poke > img").click(function(){
+                    var val = $(this).attr("class");
+                    if(val == "poke1"){
+                        if(seleccionados[0]["name"] != nombreElegido){
+                            console.log("No es este"); 
+                            if(aciertos > mejor){
+                                mejor = aciertos; 
+                                $(".mejor").text(aciertos); 
+                            }
+                            error(); 
+                        }else{
+                            acierto(); 
+                        }
+                    }else if(val == "poke2"){
+                        if(seleccionados[1]["name"] != nombreElegido){
+                            console.log("No es este"); 
+                            if(aciertos > mejor){
+                                mejor = aciertos; 
+                                $(".mejor").text(aciertos); 
+                            }
+                            error(); 
+                        }else{
+                            acierto(); 
+                        }
+                    }else if(val == "poke3"){
+                        if(seleccionados[2]["name"] != nombreElegido){
+                            console.log("No es este"); 
+                            if(aciertos > mejor){
+                                mejor = aciertos; 
+                                $(".mejor").text(aciertos); 
+                            }
+                            error(); 
+                        }else{
+                            acierto(); 
+                        }
+                    }
+                    $(".aciertos").text(aciertos); 
+                    })
+                });
+            })
+        </script>    
+    </body>
+</html>
